@@ -1,0 +1,7 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="ag" tagdir="/WEB-INF/tags" %>
+<fmt:setLocale value="pt_PT" scope="request"/>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="u" value="${sessionScope.utilizador}" scope="request"/>

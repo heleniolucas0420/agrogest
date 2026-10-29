@@ -1,0 +1,33 @@
+# Serviço systemd para o Apache Tomcat 10.1 com o AgroGest
+# Copiar para: /etc/systemd/system/tomcat.service
+# Depois: sudo systemctl daemon-reload && sudo systemctl enable --now tomcat
+
+[Unit]
+Description=Apache Tomcat 10.1 (AgroGest)
+After=network.target
+
+[Service]
+Type=forking
+
+User=tomcat
+Group=tomcat
+
+# Ajuste o caminho do Java se for diferente (ver: readlink -f $(which java))
+Environment="JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
+Environment="CATALINA_HOME=/opt/tomcat"
+Environment="CATALINA_BASE=/opt/tomcat"
+Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid"
+Environment="CATALINA_OPTS=-Xms256M -Xmx512M -Dfile.encoding=UTF-8"
+# Pasta onde o AgroGest grava o ficheiro agrogest.ser (opcional)
+Environment="JAVA_OPTS=-Dagrogest.dados=/opt/tomcat/agrogest-dados"
+
+ExecStart=/opt/tomcat/bin/startup.sh
+# shutdown.sh faz o Tomcat encerrar "com calma" -> o AgroGest grava o estado em ficheiro
+ExecStop=/opt/tomcat/bin/shutdown.sh 20
+
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=40
+
+[Install]
+WantedBy=multi-user.target

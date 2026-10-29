@@ -1,0 +1,49 @@
+<%-- Corpo da factura, partilhado pela página normal e pela versão de impressão --%>
+<article class="factura">
+    <header class="factura-topo">
+        <div class="factura-emissor">
+            <img src="${ctx}/img/logo.svg" alt="" width="44" height="44">
+            <div>
+                <div class="factura-marca">Agro<b>Gest</b></div>
+                <div class="muted">Sistema de Gestão Agrícola<br>Nampula, Moçambique</div>
+            </div>
+        </div>
+        <div class="factura-num">
+            <div class="muted">FACTURA</div>
+            <div class="numero">${venda.numeroFactura}</div>
+            <div class="muted">Data: ${venda.dataTexto}</div>
+        </div>
+    </header>
+
+    <section class="factura-cliente">
+        <div class="muted">Facturado a</div>
+        <div class="nome"><c:out value="${venda.clienteNome}"/></div>
+        <div><c:out value="${venda.clienteEndereco}"/></div>
+        <div>Tel.: <c:out value="${venda.clienteTelefone}"/> · <c:out value="${venda.clienteEmail}"/></div>
+    </section>
+
+    <table class="tabela factura-itens">
+        <thead>
+        <tr><th>#</th><th>Produto</th><th class="num">Quantidade</th><th class="num">Valor unitário</th><th class="num">Subtotal</th></tr>
+        </thead>
+        <tbody>
+        <c:forEach var="i" items="${venda.itens}" varStatus="s">
+            <tr>
+                <td>${s.count}</td>
+                <td><c:out value="${i.produtoNome}"/></td>
+                <td class="num">${i.quantidade} <c:out value="${i.unidade}"/></td>
+                <td class="num"><fmt:formatNumber value="${i.precoUnit}" pattern="#,##0.00"/> MT</td>
+                <td class="num"><fmt:formatNumber value="${i.subtotal}" pattern="#,##0.00"/> MT</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
+    <div class="factura-totais">
+        <div class="resumo-linha"><span>Subtotal</span><span><fmt:formatNumber value="${venda.subtotal}" pattern="#,##0.00"/> MT</span></div>
+        <div class="resumo-linha"><span>IVA (${taxaIva}%)</span><span><fmt:formatNumber value="${venda.iva}" pattern="#,##0.00"/> MT</span></div>
+        <div class="resumo-linha total"><span>Total</span><span><fmt:formatNumber value="${venda.total}" pattern="#,##0.00"/> MT</span></div>
+    </div>
+
+    <footer class="factura-rodape muted">Obrigado pela preferência. Documento processado pelo sistema AgroGest.</footer>
+</article>

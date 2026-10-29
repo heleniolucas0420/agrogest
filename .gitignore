@@ -1,0 +1,12 @@
+target/
+*.ser
+*.ser.bak
+*.ser.tmp
+agrogest-dados/
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.DS_Store

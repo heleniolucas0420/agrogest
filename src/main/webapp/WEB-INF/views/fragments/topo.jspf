@@ -1,0 +1,73 @@
+<c:set var="rota" value="${requestScope['jakarta.servlet.forward.servlet_path']}"/>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><c:out value="${titulo}"/> · AgroGest</title>
+    <link rel="icon" href="${ctx}/img/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="${ctx}/css/estilo.css">
+</head>
+<body class="${u != null && u.admin ? 'com-lateral' : 'sem-lateral'}">
+
+<header class="topo">
+    <a class="marca" href="${ctx}/">
+        <img src="${ctx}/img/logo.svg" alt="" width="30" height="30">
+        <span>Agro<b>Gest</b></span>
+    </a>
+
+    <c:if test="${u != null}">
+        <%-- Menu "hamburguer" só com CSS (checkbox), sem JavaScript --%>
+        <input type="checkbox" id="menu-toggle" class="menu-toggle">
+        <label for="menu-toggle" class="menu-botao" aria-label="Abrir menu"><span></span></label>
+
+        <nav class="menu">
+            <c:choose>
+                <c:when test="${u.admin}">
+                    <div class="menu-grupo">Gestão</div>
+                    <a href="${ctx}/admin" class="${rota == '/admin' ? 'ativo' : ''}">Painel</a>
+                    <a href="${ctx}/admin/fornecedores" class="${rota == '/admin/fornecedores' ? 'ativo' : ''}">Fornecedores</a>
+                    <a href="${ctx}/admin/produtos" class="${rota == '/admin/produtos' ? 'ativo' : ''}">Produtos</a>
+                    <div class="menu-grupo">Produção</div>
+                    <a href="${ctx}/admin/campanhas" class="${rota == '/admin/campanhas' ? 'ativo' : ''}">Campanhas</a>
+                    <a href="${ctx}/admin/cultivos" class="${rota == '/admin/cultivos' ? 'ativo' : ''}">Cultivos</a>
+                    <a href="${ctx}/admin/colheitas" class="${rota == '/admin/colheitas' ? 'ativo' : ''}">Colheitas</a>
+                    <div class="menu-grupo">Consultas</div>
+                    <a href="${ctx}/admin/listagens" class="${rota == '/admin/listagens' ? 'ativo' : ''}">Listagens</a>
+                    <a href="${ctx}/admin/compras" class="${rota == '/admin/compras' || rota == '/factura' ? 'ativo' : ''}">Compras</a>
+                    <a href="${ctx}/admin/relatorios" class="${rota == '/admin/relatorios' ? 'ativo' : ''}">Relatórios</a>
+                    <div class="menu-grupo">Sistema</div>
+                    <a href="${ctx}/admin/persistencia" class="${rota == '/admin/persistencia' ? 'ativo' : ''}">Persistência</a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${ctx}/catalogo" class="${rota == '/catalogo' ? 'ativo' : ''}">Catálogo</a>
+                    <a href="${ctx}/carrinho" class="${rota == '/carrinho' || rota == '/compra' ? 'ativo' : ''}">
+                        Carrinho
+                        <c:if test="${sessionScope.carrinho != null && !sessionScope.carrinho.vazio}">
+                            <span class="contador">${sessionScope.carrinho.totalItens}</span>
+                        </c:if>
+                    </a>
+                    <a href="${ctx}/minhas-compras" class="${rota == '/minhas-compras' || rota == '/factura' ? 'ativo' : ''}">Minhas compras</a>
+                </c:otherwise>
+            </c:choose>
+            <div class="menu-utilizador">
+                <span class="avatar">${fn:toUpperCase(fn:substring(u.nome, 0, 1))}</span>
+                <span class="quem">
+                    <c:out value="${u.nome}"/>
+                    <small>${u.admin ? 'Administrador' : 'Cliente'}</small>
+                </span>
+                <a href="${ctx}/logout" class="sair">Sair</a>
+            </div>
+        </nav>
+    </c:if>
+</header>
+
+<main class="conteudo">
+    <c:if test="${not empty sessionScope.msg}">
+        <div class="alerta sucesso"><c:out value="${sessionScope.msg}"/></div>
+        <c:remove var="msg" scope="session"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.erro}">
+        <div class="alerta erro"><c:out value="${sessionScope.erro}"/></div>
+        <c:remove var="erro" scope="session"/>
+    </c:if>
